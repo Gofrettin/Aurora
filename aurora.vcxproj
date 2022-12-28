@@ -144,8 +144,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="app\gui.h" />
-    <ClInclude Include="app\systeminfo.hpp" />
+    <ClInclude Include="app\gui\gui.h" />
+    <ClInclude Include="app\systeminfo\systeminfo.hpp" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_dx9.h" />
@@ -157,9 +157,9 @@
     <ClInclude Include="app\variables.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="app\gui.cpp" />
+    <ClCompile Include="app\gui\gui.cpp" />
     <ClCompile Include="app\main.cpp" />
-    <ClCompile Include="app\systeminfo.cpp" />
+    <ClCompile Include="app\systeminfo\systeminfo.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />

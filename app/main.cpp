@@ -1,4 +1,4 @@
-#include "gui.h"
+#include "gui/gui.h"
 #include <thread>
 
 int __stdcall wWinMain(HINSTANCE instance, HINSTANCE previousInstance, PWSTR arguments, int commandShow) {
