@@ -320,7 +320,7 @@ void gui::Render() noexcept {
 			ImGui::InputText("Username", buffer1, sizeof(buffer1), 0, 0, 0);
 			ImGui::InputText("Password", buffer2, sizeof(buffer2), 0, 0, 0);
 
-			if (ImGui::Button("Log In", ImVec2(150, 34))) {
+			if (ImGui::Button("Log In", ImVec2(150, 34)) || GetAsyncKeyState(VK_RETURN)) {
 				if (strcmp(buffer1, login) == 0 && strcmp(buffer2, pass) == 0) {
 					loggedIn = true;
 				}
