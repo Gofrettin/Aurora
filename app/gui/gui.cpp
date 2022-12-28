@@ -279,27 +279,31 @@ void gui::Render() noexcept {
 
 	//ImGui::Image();
 
-	if (ImGui::Button("General", ImVec2(115, 34))) {
+	if (ImGui::Button("Log In", ImVec2(115, 34))) {
 		tab = 0;
 	}
 
-	if (ImGui::Button("Hardware", ImVec2(115, 34))) {
+	if (ImGui::Button("General", ImVec2(115, 34))) {
 		tab = 1;
 	}
 
-	if (ImGui::Button("Console", ImVec2(115, 34))) {
+	if (ImGui::Button("Hardware", ImVec2(115, 34))) {
 		tab = 2;
 	}
 
-	if (ImGui::Button("Apps", ImVec2(115, 34))) {
+	if (ImGui::Button("Console", ImVec2(115, 34))) {
 		tab = 3;
 	}
 
-	if (ImGui::Button("Socials", ImVec2(115, 34))) {
+	if (ImGui::Button("Apps", ImVec2(115, 34))) {
 		tab = 4;
 	}
 
-	for (int i = 0; i < 7; i++) {
+	if (ImGui::Button("Socials", ImVec2(115, 34))) {
+		tab = 5;
+	}
+
+	for (int i = 0; i < 5; i++) {
 		ImGui::NewLine();
 	}
 
@@ -312,62 +316,100 @@ void gui::Render() noexcept {
 	ImGui::BeginChild("Content", ImVec2(505, 440), true, 0);
 	
 	if (tab == 0) {
+		if (!loggedIn) {
+			ImGui::InputText("Username", buffer1, sizeof(buffer1), 0, 0, 0);
+			ImGui::InputText("Password", buffer2, sizeof(buffer2), 0, 0, 0);
+
+			if (ImGui::Button("Log In", ImVec2(150, 34))) {
+				if (strcmp(buffer1, login) == 0 && strcmp(buffer2, pass) == 0) {
+					loggedIn = true;
+				}
+			}
+		}
+
+		if (loggedIn) {
+			if (ImGui::Button("Log Out", ImVec2(150, 34))) {
+				loggedIn = false;
+				memset(buffer1, 0, 255);
+				memset(buffer2, 0, 255);
+			}
+		}
+	}
+
+	if (tab == 1) {
 		if (ImGui::Button("Close The Application", ImVec2(150, 34))) {
 			isRunning = !isRunning;
 		}
 	}
 
-	if (tab == 1) {
-		Systeminfo sysinf;
-
-		std::string mb = "Product: " + sysinf.get_productname();
-		std::string info = "CPU: " + GetCpuInfo();
-
-		ImGui::Text(mb.c_str());
-		ImGui::Text(info.c_str());
-	}
-
 	if (tab == 2) {
-		ImGui::Text("Coming Soon...");
+		if (loggedIn) {
+			Systeminfo sysinf;
+
+			std::string mb = "Product: " + sysinf.get_productname();
+			std::string info = "CPU: " + GetCpuInfo();
+
+			ImGui::Text(mb.c_str());
+			ImGui::Text(info.c_str());
+		}
+		else {
+			ImGui::Text("Please Log In!");
+		}
+
 	}
 
 	if (tab == 3) {
-		HWND steam = FindWindow(NULL, "Steam");
-			
-		if (steam) {
-			if (ImGui::Button("Terminate Steam", ImVec2(150, 34))) {
-				PROCESSENTRY32 entry;
-				entry.dwSize = sizeof(PROCESSENTRY32);
-
-				HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-
-				if (Process32First(snapshot, &entry) == TRUE) {
-					while (Process32Next(snapshot, &entry) == TRUE) {
-						if (_stricmp(entry.szExeFile, "steam.exe") == 0) {
-							HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-
-							if (TerminateProcess(hProcess, NULL)) {
-								MessageBox(window, "Steam Process Terminated!", "Terminate", MB_OK | MB_ICONINFORMATION);
-							}
-							else {
-								MessageBox(window, "Something Went Wrong!", "Terminate", MB_OK | MB_ICONINFORMATION);
-							}
-
-							CloseHandle(hProcess);
-						}
-					}
-				}
-				CloseHandle(snapshot);
-			}
+		if (loggedIn) {
+			ImGui::Text("Coming Soon...");
 		}
 		else {
-			if (ImGui::Button("Terminate Steam", ImVec2(150, 34))) {
-				MessageBox(window, "Steam Process Not Found!", "Terminate", MB_OK | MB_ICONINFORMATION);
-			}
+			ImGui::Text("Please Log In!");
 		}
 	}
 
 	if (tab == 4) {
+		if (loggedIn) {
+			HWND steam = FindWindow(NULL, "Steam");
+
+			if (steam) {
+				if (ImGui::Button("Terminate Steam", ImVec2(150, 34))) {
+					PROCESSENTRY32 entry;
+					entry.dwSize = sizeof(PROCESSENTRY32);
+
+					HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+
+					if (Process32First(snapshot, &entry) == TRUE) {
+						while (Process32Next(snapshot, &entry) == TRUE) {
+							if (_stricmp(entry.szExeFile, "steam.exe") == 0) {
+								HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+
+								if (TerminateProcess(hProcess, NULL)) {
+									MessageBox(window, "Steam Process Terminated!", "Terminate", MB_OK | MB_ICONINFORMATION);
+								}
+								else {
+									MessageBox(window, "Something Went Wrong!", "Terminate", MB_OK | MB_ICONINFORMATION);
+								}
+
+								CloseHandle(hProcess);
+							}
+						}
+					}
+					CloseHandle(snapshot);
+				}
+			}
+			else {
+				if (ImGui::Button("Terminate Steam", ImVec2(150, 34))) {
+					MessageBox(window, "Steam Process Not Found!", "Terminate", MB_OK | MB_ICONINFORMATION);
+				}
+			}
+		}
+		else {
+			ImGui::Text("Please Log In!");
+		}
+
+	}
+
+	if (tab == 5) {
 		if (ImGui::Button("GitHub", ImVec2(110, 34))) {
 			ShellExecute(0, 0, "https://github.com/szlug3ns", 0, 0, SW_SHOW);
 		}
