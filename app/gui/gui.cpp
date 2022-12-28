@@ -4,41 +4,11 @@
 #include "../../imgui/imgui_impl_dx9.h"
 #include "../../imgui/imgui_impl_win32.h"
 #include "../systeminfo/systeminfo.hpp"
+#include "../cpuinfo/getcpuinfo.h"
 
 #include <iostream>
 #include <tlhelp32.h>
 #include <sysinfoapi.h>
-#include <intrin.h>
-#include <string>
-#include <array>
-
-
-std::string GetCpuInfo() {
-	std::array<int, 4> integerBuffer{};
-	constexpr size_t sizeofIntegerBuffer = sizeof(int) * integerBuffer.size();
-
-	std::array<char, 64> charBuffer = {};
-
-	constexpr std::array<int, 3> functionIds = {
-		0x8000'0002,
-		0x8000'0003,
-		0x8000'0004
-	};
-
-	std::string cpu;
-
-	for (int id : functionIds) {
-		__cpuid(integerBuffer.data(), id);
-		std::memcpy(charBuffer.data(), integerBuffer.data(), sizeofIntegerBuffer);
-		cpu += std::string(charBuffer.data());
-	}
-
-	return cpu;
-}
-
-void getprocId(const char* wndName, DWORD& procId) {
-	GetWindowThreadProcessId(FindWindow(NULL, wndName), &procId);
-}
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND window, UINT message, WPARAM wideParameter, LPARAM longParameter);
 
