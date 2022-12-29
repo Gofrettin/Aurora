@@ -135,7 +135,7 @@ void gui::CreateImGui() noexcept {
 	ImGui::CreateContext();
 	ImGuiIO& io = ::ImGui::GetIO();
 
-	io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Regular.ttf", 18.2f);
+	io.Fonts->AddFontFromFileTTF("c:\\windows\\fonts\\segoeui.ttf", 18.2f);
 
 	io.IniFilename = NULL;
 
@@ -279,35 +279,47 @@ void gui::Render() noexcept {
 
 	//ImGui::Image();
 
-	if (ImGui::Button("Log In", ImVec2(115, 34))) {
-		tab = 0;
-	}
-
-	if (ImGui::Button("General", ImVec2(115, 34))) {
-		tab = 1;
-	}
-
-	if (ImGui::Button("Hardware", ImVec2(115, 34))) {
-		tab = 2;
-	}
-
-	if (ImGui::Button("Console", ImVec2(115, 34))) {
-		tab = 3;
-	}
-
-	if (ImGui::Button("Apps", ImVec2(115, 34))) {
-		tab = 4;
-	}
-
-	if (ImGui::Button("Socials", ImVec2(115, 34))) {
-		tab = 5;
-	}
-
-	for (int i = 0; i < 5; i++) {
-		ImGui::NewLine();
-	}
-
 	ImGui::Text("     By szlug3ns*");
+
+	if (!loggedIn) {
+		if (ImGui::Button("Log In", ImVec2(115, 34))) {
+			tab = 0;
+		}
+
+		if (ImGui::Button("General", ImVec2(115, 34))) {
+			tab = 1;
+		}
+
+		if (ImGui::Button("Socials", ImVec2(115, 34))) {
+			tab = 5;
+		}
+	}
+
+	else if (loggedIn) {
+		if (ImGui::Button("Log In", ImVec2(115, 34))) {
+			tab = 0;
+		}
+
+		if (ImGui::Button("General", ImVec2(115, 34))) {
+			tab = 1;
+		}
+
+		if (ImGui::Button("Hardware", ImVec2(115, 34))) {
+			tab = 2;
+		}
+
+		if (ImGui::Button("Console", ImVec2(115, 34))) {
+			tab = 3;
+		}
+
+		if (ImGui::Button("Apps", ImVec2(115, 34))) {
+			tab = 4;
+		}
+
+		if (ImGui::Button("Socials", ImVec2(115, 34))) {
+			tab = 5;
+		}
+	}
 
 	ImGui::EndChild();
 
@@ -327,12 +339,16 @@ void gui::Render() noexcept {
 			}
 		}
 
-		if (loggedIn) {
+		else if (loggedIn) {
 			if (ImGui::Button("Log Out", ImVec2(150, 34))) {
 				loggedIn = false;
 				memset(buffer1, 0, 255);
 				memset(buffer2, 0, 255);
 			}
+		}
+
+		else {
+			TerminateProcess(GetCurrentProcess(), NULL);
 		}
 	}
 
@@ -352,18 +368,27 @@ void gui::Render() noexcept {
 			ImGui::Text(mb.c_str());
 			ImGui::Text(info.c_str());
 		}
-		else {
+
+		else if (!loggedIn) {
 			ImGui::Text("Please Log In!");
 		}
 
+		else {
+			TerminateProcess(GetCurrentProcess(), NULL);
+		}
 	}
 
 	if (tab == 3) {
 		if (loggedIn) {
 			ImGui::Text("Coming Soon...");
 		}
-		else {
+
+		else if (!loggedIn) {
 			ImGui::Text("Please Log In!");
+		}
+
+		else {
+			TerminateProcess(GetCurrentProcess(), NULL);
 		}
 	}
 
@@ -386,6 +411,7 @@ void gui::Render() noexcept {
 								if (TerminateProcess(hProcess, NULL)) {
 									MessageBox(window, "Steam Process Terminated!", "Terminate", MB_OK | MB_ICONINFORMATION);
 								}
+
 								else {
 									MessageBox(window, "Something Went Wrong!", "Terminate", MB_OK | MB_ICONINFORMATION);
 								}
@@ -397,16 +423,21 @@ void gui::Render() noexcept {
 					CloseHandle(snapshot);
 				}
 			}
-			else {
+
+			else if (!steam) {
 				if (ImGui::Button("Terminate Steam", ImVec2(150, 34))) {
 					MessageBox(window, "Steam Process Not Found!", "Terminate", MB_OK | MB_ICONINFORMATION);
 				}
 			}
 		}
-		else {
+
+		else if (!loggedIn) {
 			ImGui::Text("Please Log In!");
 		}
 
+		else {
+			TerminateProcess(GetCurrentProcess(), NULL);
+		}
 	}
 
 	if (tab == 5) {
