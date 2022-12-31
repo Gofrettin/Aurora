@@ -269,6 +269,9 @@ void gui::EndRender() noexcept {
 }
 
 void gui::Render() noexcept {
+	ImGui::PushStyleColor(ImGuiCol_Text, text);
+	ImGui::PushStyleColor(ImGuiCol_CheckMark, text);
+
 	ImGui::SetNextWindowPos({ 0, 0 });
 	ImGui::SetNextWindowSize({ WIDTH, HEIGHT });
 	ImGui::Begin("Aurora", &isRunning, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove);
@@ -356,6 +359,8 @@ void gui::Render() noexcept {
 		if (ImGui::Button("Close The Application", ImVec2(150, 34))) {
 			isRunning = !isRunning;
 		}
+
+		ImGui::ColorEdit4("Font", (float*)&text, 0);
 	}
 
 	if (tab == 2) {
@@ -457,4 +462,7 @@ void gui::Render() noexcept {
 	ImGui::EndChild();
 
 	ImGui::End();
+
+	ImGui::PopStyleColor();
+	ImGui::PopStyleColor();
 }
